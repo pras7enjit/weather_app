@@ -4,6 +4,7 @@ module.exports = {
 	"cityByNameUrl": "http://api.openweathermap.org/data/2.5/forecast/daily?",
 	"APPID": "620e15d6b17e55c0f429ccbbf98827c6",
 	"defaultLimit": 10,
-	"maxLimit": 20
+	"maxLimit": 20,
+	"days": 14
 
 }

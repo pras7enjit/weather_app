@@ -5,7 +5,7 @@
 	queryPager = require('./queryPager'),
 	weatherModel = require('../models/weatherModel.js');
 	error = require('./err');
-	var allcities, dayCount=14; 
+	var allcities, dayCount=config.days; 
 	var pageArray = [];
 	cityService.bulkCityRegister = function(cities, callback) {
 		console.log("In bulk City Register service");
@@ -22,13 +22,11 @@
 
 	cityService.getCityWeather = function(page, limit, callback) {
 		console.log("In function getCityWeather");
-		var q="Duragpur", dayCount = 14, cities = [], c=0, weather=[];
+		var q="Duragpur",  cities = [], c=0, weather=[];
 		var url = config.cityByNameUrl+"q="+q+"&cnt="+dayCount+"&APPID="+config.APPID;
-		var flag=false;
 		console.log("pageArray", pageArray)
 		if(pageArray.indexOf(Number(page))!==-1){
-			console.log("In page array ",pageArray.indexOf(Number(page)), pageArray, Number(page), Number(limit))
-			flag=true;//pageArray.push(Number(page));
+			console.log("In page array ",pageArray.indexOf(Number(page)), pageArray, Number(page), Number(limit))//pageArray.push(Number(page));
 			queryPager.pager(Number(page), Number(limit), config.defaultLimit, config.maxLimit, function (_skip, _limit) {
 	            skip = _skip;
 	            if(skip===0) {
@@ -143,74 +141,13 @@
 				}
 			})
 		}
-		// callback(null, weather);
-		// weatherModel.insertMany(finalWeather)
-  //       .then(function(docs) {
-  //            // return res.status(201).json(docs);
-  //            callback(null, docs);//return;
-  //       })
-        // .catch(function(err) {
-        //     // return res.status(500).json({
-        //     //         message: 'Error during bulk cities Register.',
-        //     //         error: err
-        //     //     });
-        //     callback(null, err);//return;
-        // })
-
-  		// for (var a = 0; a < finalWeather.length; a++) {
-  		// 	// count++;
-  		// 	console.log("finalWeather[",a,"]", finalWeather[a]);
-  		// 	weatherModel
-  		// 	.findOne({cityId: finalWeather[a].cityId})//finalWeather[a].cityId})
-  		// 	.exec(function(err, weatherResponse) {
-  		// 		console.log("weatherResponse ====>", weatherResponse);
-  		// 		if(err) {
-  		// 			callback(err); return;
-  		// 		}
-  		// 		if(!weatherResponse) {
-  		// 			finalWeather[a].save(function(err, weatherCreateResponse) {
-  		// 				if(err) {
-  		// 					callback(err); return;
-  		// 				}
-  		// 				console.log("weatherCreateResponse =-=-=>", weatherCreateResponse);
-  		// 				count++;
-  		// 				if(count === finalWeather.length) {
-  		// 					callback();
-  		// 				}
-  		// 			})
-  		// 		}
-  		// 		else {
-  		// 			 weatherResponse.city = finalWeather[a].city;
-  		// 			 weatherResponse.cod = finalWeather[a].cod;
-  		// 			 weatherResponse.message = finalWeather[a].message;
-  		// 			 weatherResponse.cnt = finalWeather[a].cnt;
-  		// 			 weatherResponse.list = finalWeather[a].list;
-  		// 			 weatherResponse.save(function(err, weatherCreateResponse) {
-  		// 				if(err) {
-  		// 					callback(err); return;
-  		// 				}
-  		// 				count++;
-  		// 				if(count === finalWeather.length) {
-  		// 					callback();
-  		// 				}
-  		// 			})
-  		// 		}
-  		// 	})
-  		// }
+		
 	}
 
 	cityService.getCityWeatherByName = function(city, callback) {
 		console.log("In function getCityWeatherByName");
 		console.log("city", city);
 		var cityObjId, jsonObject, objOfCity={}, cityModelObj, weatherModelObj, resArray=[];
-		// for (var i = 0; i < allcities.length; i++) {
-		// 	// console.log("city by name", allcities[i].name)
-		// 	if(city.toUpperCase() === allcities[i].name.toUpperCase()){
-		// 		console.log("allcities[i]._id ===", allcities[i]._id, allcities[i].name) 
-		// 		cityObjId = allcities[i]._id;
-
-		// 	}
-		// }
 		getAllCities(city, function(err, getCityRes) {
 			if(err) {
 				callback(err); return;
@@ -277,53 +214,6 @@
 				})
 			}
 		})
-		// console.log("cityObjId", cityObjId);
-		// if(cityObjId!==undefined) {
-		// 	console.log("hiii")
-		// 	weatherModel
-		// 	.findOne({cityId: cityObjId})
-		// 	.exec(function(err, cityWeather) {
-		// 		if(err) {
-		// 			callback(err); return;
-		// 		}
-		// 		if(!cityWeather) {
-		// 		console.log("err.scrollErr", error.scrollErr)
-		// 		callback(error.scrollErr, null);return;
-		// 		}
-		// 		callback(null, cityWeather); return;
-		// 	})
-		// } 
-		// else {
-		// 	console.log("hello")
-		// 	url = config.cityByNameUrl+"q="+city+"&cnt="+dayCount+"&APPID="+config.APPID;
-		// 	common.get(url, {}, function(err, res) {
-		// 		if(err) {
-		// 			console.log("err in getting city weather", err);	
-		// 			callback(err);
-		// 			return;
-		// 		}
-		// 		jsonObject = JSON.parse(res.body);
-		// 		objOfCity.name = city;
-		// 		cityModelObj = new cityModel(objOfCity);
-		// 		cityModelObj.save(function(err, createCityRes) {
-		// 			if(err) {
-		// 				callback(err); return;
-		// 			}
-		// 			console.log("createCityRes._id ===>", createCityRes._id);
-		// 			jsonObject.cityId = createCityRes._id;
-		// 			weatherModelObj = new weatherModel(jsonObject);
-		// 			weatherModelObj.save(function(err, newCityWeatherObj) {
-		// 				if(err) {
-		// 					callback(err); return;
-		// 				}
-		// 				callback(null, newCityWeatherObj);return
-		// 			})
-		// 			// callback(null, weatherModelObj); return;
-		// 		})
-		// 		// callback(null, jsonObject)//res.body
-
-		// 	})
-		// }
 	}
 
 
