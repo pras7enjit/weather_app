@@ -6,6 +6,7 @@
 	weatherModel = require('../models/weatherModel.js');
 	error = require('./err');
 	var allcities, dayCount=14; 
+	var pageArray = [];
 	cityService.bulkCityRegister = function(cities, callback) {
 		console.log("In bulk City Register service");
 		cityModel.insertMany(cities)
@@ -23,22 +24,39 @@
 		console.log("In function getCityWeather");
 		var q="Duragpur", dayCount = 14, cities = [], c=0, weather=[];
 		var url = config.cityByNameUrl+"q="+q+"&cnt="+dayCount+"&APPID="+config.APPID;
-		// console.log("url : ", url);
-		// common.get(url, {}, function(err, res) {
-		// 	if(err) {
-		// 		console.log("err in getting city weather", err);	
-		// 		callback(err);
-		// 		return;
-		// 	}
-		// 	jsonObject = JSON.parse(res.body)
-		// 	callback(null, jsonObject.city.name)//res.body
-		// })		
-		// weatherModel.remove({}, callback)
-		queryPager.pager(page, limit, config.defaultLimit, config.maxLimit, function (_skip, _limit) {
+		var flag=false;
+		console.log("pageArray", pageArray)
+		if(pageArray.indexOf(Number(page))!==-1){
+			console.log("In page array ",pageArray.indexOf(Number(page)), pageArray, Number(page), Number(limit))
+			flag=true;//pageArray.push(Number(page));
+			queryPager.pager(Number(page), Number(limit), config.defaultLimit, config.maxLimit, function (_skip, _limit) {
+	            skip = _skip;
+	            if(skip===0) {
+	            	page=0;
+	            }
+	            limit = _limit;
+	        });
+	        weatherModel
+	        .find()
+	        .skip(skip)
+	        .limit(limit)
+	        .exec(function(err, weatherReport) {
+	        	if(err) {
+	        		callback(err); return;
+	        	}
+	        	callback(null, weatherReport);return;
+	        })
+		}
+		else {
+			pageArray.push(Number(page));
+			queryPager.pager(page, limit, config.defaultLimit, config.maxLimit, function (_skip, _limit) {
             skip = _skip;
+            if(skip===0) {
+            	page=0;
+            }
             limit = _limit;
         });
-        console.log("skip", typeof skip);
+        console.log("skip", skip);
         console.log("limit", limit);
         removeAllDoc(page, function(err) {
 
@@ -82,6 +100,9 @@
 				// callback(null, listOfCities);
 			})
 		})
+
+		}
+		
 	}
 	function removeAllDoc(page, callback) {
 		console.log("page ==>", typeof page)
