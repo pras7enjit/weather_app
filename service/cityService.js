@@ -181,7 +181,7 @@
 	cityService.getCityWeatherByName = function(city, callback) {
 		console.log("In function getCityWeatherByName");
 		console.log("city", city);
-		var cityObjId, jsonObject, objOfCity={}, cityModelObj, weatherModelObj;
+		var cityObjId, jsonObject, objOfCity={}, cityModelObj, weatherModelObj, resArray=[];
 		// for (var i = 0; i < allcities.length; i++) {
 		// 	// console.log("city by name", allcities[i].name)
 		// 	if(city.toUpperCase() === allcities[i].name.toUpperCase()){
@@ -209,7 +209,8 @@
 					console.log("err.scrollErr", error.scrollErr)
 					callback(error.scrollErr, null);return;
 					}
-					callback(null, cityWeather); return;
+					resArray.push(cityWeather)
+					callback(null, resArray); return;
 				})
 			} 
 			else {
@@ -244,7 +245,9 @@
 							if(err) {
 								callback(err); return;
 							}
-							callback(null, newCityWeatherObj);return
+							resArray.push(newCityWeatherObj)
+							// callback(null, newCityWeatherObj);return
+							callback(null, resArray);return
 						})
 						// callback(null, weatherModelObj); return;
 					})
