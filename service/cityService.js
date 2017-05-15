@@ -14,11 +14,8 @@
              callback(null, docs);return;
         })
         .catch(function(err) {
-            // return res.status(500).json({
-            //         message: 'Error during bulk cities Register.',
-            //         error: err
-            //     });
-            callback(null, err);return;
+        	console.log("err ", err)
+            callback(error.bulkRegisterErr, null);return;
         });
 	}
 

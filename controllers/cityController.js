@@ -1,5 +1,7 @@
 var cityModel = require('../models/cityModel.js');
 var cityService = require('../service/cityService');
+var util = require('../utils/utils.js');
+var error = require('../service/err');
 console.log("test push")
 
 /**
@@ -115,9 +117,14 @@ module.exports = {
     bulkCityRegister: function(req, res, next) {
         console.log("In bulk City Register Controller");
         var cities = req.body;
+        console.log('req.body im bulk register', req.body);
+        if(util.isEmpty(req.body)){
+            return res.status(400).json(error.bulkRegisterErr);
+        }
         cityService.bulkCityRegister(cities, function(err, bulkCreateResponse) {
             if(err) {
-                next(err); return;
+                // next(err); return;
+                return res.status(400).json(err);
             }
             return res.status(201).json(bulkCreateResponse);
         })
