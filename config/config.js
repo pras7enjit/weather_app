@@ -1,5 +1,5 @@
 module.exports = {
-	/*Creater: Ghosh Prasenjit*/
+	/*Creater: Ghosh Prasenjit ----*/
 	// "url": "mongodb://app_weather:app_weather@ds011912.mlab.com:11912/app_weather",
 	// "name": "app_weather"
 	"cityByNameUrl": "http://api.openweathermap.org/data/2.5/forecast/daily?",
